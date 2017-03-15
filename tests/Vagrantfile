@@ -3,6 +3,7 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/jessie64"
+  config.ssh.forward_agent = true
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
@@ -17,4 +18,11 @@ Vagrant.configure("2") do |config|
         echo "- Not using apt-proxy $APTPROXY"
     fi
    SHELL
+
+  fakecam_git_local = `git rev-parse --show-toplevel`
+  vagranthost = "192.168.121.1"
+  config.vm.provision "ansible" do |ansible|
+    ansible.extra_vars = { fakecam_repo_path: "ssh://"+ENV['USER']+"@"+vagranthost+fakecam_git_local }
+    ansible.playbook = "provision.yml"
+  end
 end

@@ -1,0 +1,43 @@
+- hosts: all
+  become: true
+  become_method: sudo
+
+  vars:
+
+  tasks:
+  - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: install other programs
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - git
+
+  - name: v4l2loopback and gstreamer install
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - v4l2loopback-dkms
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-tools
+
+# to be added?
+#      - gstreamer1.0-plugins-bad
+#      - gstreamer1.0-plugins-ugly
+
+
+  - name: add v4l2loopback module to kernel
+    modprobe:
+      name: v4l2loopback
+      state: present
+
+  - name: "pull fakecam repo from {{ fakecam_repo_path }}"
+    git:
+      repo: "{{ fakecam_repo_path }}"
+      dest: /opt/fakecam
+      accept_hostkey: yes
