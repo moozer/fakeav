@@ -36,8 +36,11 @@
       name: v4l2loopback
       state: present
 
-  - name: "pull fakecam repo from {{ fakecam_repo_path }}"
+  - name: share repo with vagrant client
+    debug: msg="run this, git daemon --base-path=. --export-all --reuseaddr --informative-errors --verbose --listen=192.168.121.1"
+
+  - name: "pull fakeav repo from {{ fakeav_repo_path }}"
     git:
-      repo: "{{ fakecam_repo_path }}"
-      dest: /opt/fakecam
+      repo: "{{ fakeav_repo_path }}"
+      dest: /opt/fakeav
       accept_hostkey: yes

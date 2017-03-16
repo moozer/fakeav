@@ -19,10 +19,10 @@ Vagrant.configure("2") do |config|
     fi
    SHELL
 
-  fakecam_git_local = `git rev-parse --show-toplevel`
+  fakeav_git_local = `git rev-parse --show-toplevel`
   vagranthost = "192.168.121.1"
   config.vm.provision "ansible" do |ansible|
-    ansible.extra_vars = { fakecam_repo_path: "ssh://"+ENV['USER']+"@"+vagranthost+fakecam_git_local }
+    ansible.extra_vars = { fakeav_repo_path: "git://"+vagranthost+"/fakeav" }
     ansible.playbook = "provision.yml"
   end
 end
